@@ -1,4 +1,6 @@
-package lab2;
+package lab3;
+
+import java.util.Random;
 
 public class Matrix {
     double[] data;
@@ -189,5 +191,25 @@ public class Matrix {
         norm = Math.sqrt(norm);
         
         return norm;
+    }
+    
+    public static Matrix random(int rows, int cols) {
+        Matrix m = new Matrix(rows, cols);
+        Random r = new Random();
+        
+        for (int i=0; i<m.rows; i++)
+            for (int j=0; j<m.cols; j++)
+                m.set(i, j, r.nextDouble());
+        
+        return m;
+    }
+    
+    public static Matrix eye(int n) {
+        Matrix m = new Matrix(n, n);
+        
+        for (int i=0; i<n; i++)
+            m.set(i, i, 1);
+        
+        return m;
     }
 }
