@@ -151,13 +151,13 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testAdd_Matrix() {
         System.out.println("add");
-        Matrix m = null;
-        Matrix instance = null;
-        Matrix expResult = null;
+        Matrix m = new Matrix(new double[][] {{1,2,3,4},{5,6},{7,8},{9}});
+        Matrix instance = new Matrix(new double [][] {{1,0,0,0}, {2}, {3}, {4}});
+        Matrix expResult = new Matrix(new double [][] {{2,2,3,4},{7,6},{10,8},{13}});
         Matrix result = instance.add(m);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int row = 2;
+        int col = 1;
+        assertEquals(expResult.get(row, col), result.get(row, col));
     }
 
     /**
@@ -166,13 +166,13 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testSub_Matrix() {
         System.out.println("sub");
-        Matrix m = null;
-        Matrix instance = null;
-        Matrix expResult = null;
+        Matrix m = new Matrix(new double[][] {{1,2,3,4},{5,6},{7,8},{9}});
+        Matrix instance = new Matrix(new double [][] {{1,0,0,0}, {2}, {3}, {4}});
+        Matrix expResult = new Matrix(new double [][] {{0,-2,-3,-4},{-3,-6},{-4,-8},{-5}});
         Matrix result = instance.sub(m);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int row = 2;
+        int col = 1;
+        assertEquals(expResult.get(row, col), result.get(row, col));
     }
 
     /**
@@ -181,13 +181,13 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testMul_Matrix() {
         System.out.println("mul");
-        Matrix m = null;
-        Matrix instance = null;
-        Matrix expResult = null;
+        Matrix m = new Matrix(new double[][] {{1,2,3,4},{5,6},{7,8},{9}});
+        Matrix instance = new Matrix(new double [][] {{1,0,0,0}, {2}, {3}, {4}});
+        Matrix expResult = new Matrix(new double [][] {{1,0,0,0},{10},{21},{36}});
         Matrix result = instance.mul(m);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int row = 2;
+        int col = 1;
+        assertEquals(expResult.get(row, col), result.get(row, col));
     }
 
     /**
@@ -196,13 +196,13 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testDiv_Matrix() {
         System.out.println("div");
-        Matrix m = null;
-        Matrix instance = null;
-        Matrix expResult = null;
+        Matrix m = new Matrix(new double[][] {{1,2,3,4},{5,6},{7,8},{9}});
+        Matrix instance = new Matrix(new double [][] {{1,0,0,0}, {2}, {3}, {4}});
+        Matrix expResult = new Matrix(new double [][] {{1,0,0,0},{2/5},{7/3},{9/4}});
         Matrix result = instance.div(m);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int row = 2;
+        int col = 1;
+        assertEquals(expResult.get(row, col), result.get(row, col));
     }
 
     /**
@@ -273,13 +273,15 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testDot() {
         System.out.println("dot");
-        Matrix m = null;
-        Matrix instance = null;
-        Matrix expResult = null;
+        Matrix m = new Matrix(new double[][] {{6,5,4},{3,2,1}});
+        Matrix instance = new Matrix(new double [][] {{1,2},{3,4},{5,6},{7,8},{9,10}});
+        Matrix expResult = new Matrix(new double [][] {{12,9,6},{30,23,16},
+                                                       {48,37,26},{66,51,36},
+                                                       {84,65,46}});
         Matrix result = instance.dot(m);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int row = 2;
+        int col = 1;
+        assertEquals(expResult.get(row, col), result.get(row, col));
     }
 
     /**
@@ -288,27 +290,10 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testFrobenius() {
         System.out.println("frobenius");
-        Matrix instance = null;
-        double expResult = 0.0;
+        Matrix instance = new Matrix(new double[][] {{2,-2,1},{-1,3,-1},{2,-4,1}});
+        double expResult = 6.40;
         double result = instance.frobenius();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of random method, of class Matrix.
-     */
-    @org.junit.jupiter.api.Test
-    public void testRandom() {
-        System.out.println("random");
-        int rows = 0;
-        int cols = 0;
-        Matrix expResult = null;
-        Matrix result = Matrix.random(rows, cols);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult, result, 0.01);
     }
 
     /**
@@ -317,12 +302,9 @@ public class MatrixTest {
     @org.junit.jupiter.api.Test
     public void testEye() {
         System.out.println("eye");
-        int n = 0;
-        Matrix expResult = null;
+        int n = 4;
         Matrix result = Matrix.eye(n);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(Math.sqrt(n), result.frobenius());
     }
     
 }

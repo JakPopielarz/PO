@@ -83,7 +83,7 @@ public class Matrix {
             for (int i=0; i<rows; i++) {
                 for (int j=0; j<cols; j++){
                     double value = this.get(i, j) + m.get(i, j);
-                    result.set(j, j, value);
+                    result.set(i, j, value);
                 }
             }
             return result;
@@ -97,7 +97,7 @@ public class Matrix {
             for (int i=0; i<rows; i++) {
                 for (int j=0; j<cols; j++){
                     double value = this.get(i, j) - m.get(i, j);
-                    result.set(j, j, value);
+                    result.set(i, j, value);
                 }
             }
             return result;
@@ -111,7 +111,7 @@ public class Matrix {
             for (int i=0; i<rows; i++) {
                 for (int j=0; j<cols; j++){
                     double value = this.get(i, j) * m.get(i, j);
-                    result.set(j, j, value);
+                    result.set(i, j, value);
                 }
             }
             return result;
@@ -125,7 +125,7 @@ public class Matrix {
             for (int i=0; i<rows; i++) {
                 for (int j=0; j<cols; j++){
                     double value = this.get(i, j) / m.get(i, j);
-                    result.set(j, j, value);
+                    result.set(i, j, value);
                 }
             }
             return result;
@@ -137,7 +137,7 @@ public class Matrix {
         Matrix result = new Matrix(this.rows, this.cols);
         for (int i=0; i<rows; i++)
             for (int j=0; j<cols; j++)
-                result.set(i,j, this.get(i,j)+w);
+                result.set(i, j, this.get(i,j)+w);
         return result;
     }
     
