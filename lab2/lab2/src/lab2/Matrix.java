@@ -27,6 +27,31 @@ public class Matrix {
                 data[i*cols+j] = d[i][j];
     }
 
+    Matrix mean(int axis) {
+        if (axis == 0) {
+            Matrix result = new Matrix(1, cols);
+            for (int i=0; i<rows; i++) {
+                int sum = 0;
+                for (int j=0; j<cols; j++) {
+                    sum += this.get(j, i);
+                }
+                result.set(0, i, sum / rows);
+            }
+            return result;
+        } else if (axis == 1) {
+            Matrix result = new Matrix(rows, 1);
+            for (int i=0; i<rows; i++) {
+                int sum = 0;
+                for (int j=0; j<cols; j++) {
+                    sum += this.get(i, j);
+                }
+                result.set(i, 0, sum / cols);
+            }
+            return result;
+        }
+        throw new RuntimeException(String.format("%d can't be passed as an axis: must be 0 (along rows) or 1 (along cols).",axis));
+    }
+    
     double[][] asArray() {
         double[][] array_2d = new double[rows][cols];
 
