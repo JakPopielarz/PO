@@ -18,8 +18,7 @@ public class Variable extends Node {
     
     @Override
     boolean isZero() {
-        double eval_value = this.evaluate();
-        return (eval_value == 0);
+        return false;
     }
     
     @Override

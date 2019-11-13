@@ -21,8 +21,7 @@ public class Power extends Node {
     
     @Override
     boolean isZero() {
-        double value = this.evaluate();
-        return (value == 0);
+        return false;
     }
     
     @Override

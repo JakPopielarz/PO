@@ -9,21 +9,25 @@ public class Prod extends Node {
     Prod(){}
  
     Prod(Node n1){
-        args.add(n1);
+        if (! n1.isZero()) args.add(n1);
     }
 
     Prod(double c){
-        args.add(new Constant(c));
+        if (c != 0) args.add(new Constant(c));
     }
  
     Prod(Node n1, Node n2){
-        args.add(n1);
-        args.add(n2);
+        if (! (n1.isZero() || n2.isZero())) {
+            args.add(n1);
+            args.add(n2);
+        }
     }
     
     Prod(double c, Node n){
-        args.add(new Constant(c));
-        args.add(n);
+        if (c != 0 && (! n.isZero())) {
+            args.add(new Constant(c));
+            args.add(n);
+        }
     }
 
     Prod mul(Node n){
@@ -35,7 +39,7 @@ public class Prod extends Node {
         args.add(new Constant(c));
         return this;
     }
-
+    
     @Override
     Node diff(Variable var) {
         Sum r = new Sum();
@@ -46,15 +50,16 @@ public class Prod extends Node {
                 if(j==i)m.mul(f.diff(var));
                 else m.mul(f);
             }
-            if (!m.isZero()) r.add(m);
+            if(!m.args.isEmpty()) r.add(m);
         }
         return r;
     }
     
     @Override
     boolean isZero() {
-        double value = this.evaluate();
-        if (value == 0) return true;
+        for (Node n : args) {
+            if (n.isZero()) return true;
+        }
         return false;
     }
     

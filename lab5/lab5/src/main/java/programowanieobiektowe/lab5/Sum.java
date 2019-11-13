@@ -9,48 +9,43 @@ public class Sum extends Node {
     Sum(){}
  
     Sum(Node n1, Node n2){
-        args.add(n1);
-        args.add(n2);
-    }
-    
-    Sum(List<Node> expressions) {
-        args = expressions;
+        if (! n1.isZero()) args.add(n1);
+        if (! n2.isZero()) args.add(n2);
     }
  
     Sum add(Node n){
-        args.add(n);
+        if (! n.isZero()) args.add(n);
         return this;
     }
  
     Sum add(double c){
-        args.add(new Constant(c));
+        if (c != 0) args.add(new Constant(c));
         return this;
     }
  
     Sum add(double c, Node n) {
-        Node mul = new Prod(c,n);
-        args.add(mul);
+        if (c != 0 && (! n.isZero())) {
+            Node mul = new Prod(c,n);
+            args.add(mul);
+        }
         return this;
     }
 
     @Override
     Node diff(Variable var) {
-        List<Node> expressions = new ArrayList<>();
-        Node tmp;
+        Sum r = new Sum();
         for(Node n:args){
-            tmp = n.diff(var);
-            if (! tmp.isZero()) expressions.add(tmp);
+            r.add(n.diff(var));
         }
-        
-        if (expressions.isEmpty()) return new Constant(0);
-        else if (expressions.size() == 1) return expressions.get(0);
-        else return new Sum(expressions);
+        return r;
     }
     
     @Override
     boolean isZero() {
-        double value = this.evaluate();
-        return (value == 0);
+        for (Node n : args) {
+            if (!n.isZero()) return false;
+        }
+        return true;
     }
     
     @Override
