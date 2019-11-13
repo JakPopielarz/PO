@@ -12,6 +12,10 @@ public class Sum extends Node {
         args.add(n1);
         args.add(n2);
     }
+    
+    Sum(List<Node> expressions) {
+        args = expressions;
+    }
  
     Sum add(Node n){
         args.add(n);
@@ -28,7 +32,27 @@ public class Sum extends Node {
         args.add(mul);
         return this;
     }
- 
+
+    @Override
+    Node diff(Variable var) {
+        List<Node> expressions = new ArrayList<>();
+        Node tmp;
+        for(Node n:args){
+            tmp = n.diff(var);
+            if (! tmp.isZero()) expressions.add(tmp);
+        }
+        
+        if (expressions.isEmpty()) return new Constant(0);
+        else if (expressions.size() == 1) return expressions.get(0);
+        else return new Sum(expressions);
+    }
+    
+    @Override
+    boolean isZero() {
+        double value = this.evaluate();
+        return (value == 0);
+    }
+    
     @Override
     public double evaluate() {
         double result = 0;
@@ -40,7 +64,7 @@ public class Sum extends Node {
         return sign*result;
     }
  
-    int getArgumentsCount(){return args.size();}
+    int getArgumentsCount(){ return args.size(); }
  
     public String toString(){
         StringBuilder b =  new StringBuilder();

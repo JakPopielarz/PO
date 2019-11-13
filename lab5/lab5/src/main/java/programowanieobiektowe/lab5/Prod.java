@@ -35,7 +35,29 @@ public class Prod extends Node {
         args.add(new Constant(c));
         return this;
     }
- 
+
+    @Override
+    Node diff(Variable var) {
+        Sum r = new Sum();
+        for(int i=0; i<args.size(); i++) { 
+            Prod m= new Prod();
+            for(int j=0; j<args.size(); j++) {
+                Node f = args.get(j);
+                if(j==i)m.mul(f.diff(var));
+                else m.mul(f);
+            }
+            if (!m.isZero()) r.add(m);
+        }
+        return r;
+    }
+    
+    @Override
+    boolean isZero() {
+        double value = this.evaluate();
+        if (value == 0) return true;
+        return false;
+    }
+    
     @Override
     public double evaluate() {
         double result =1;
