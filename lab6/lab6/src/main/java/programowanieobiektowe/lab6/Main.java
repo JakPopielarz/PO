@@ -7,15 +7,22 @@ import java.util.logging.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        CSVReader reader;
-        try {
-            reader = new CSVReader("with-header.csv", ",", true);
+        readAsString();
+    }
+    
+    static void readAsString() {
+        CSVReader reader = new CSVReader("with-header1.csv", ";", true);
 
-            while(reader.next()) {
-                System.out.println(Arrays.toString(reader.current));
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        while(reader.next()) {
+            String id = reader.get(0);
+            String imie = reader.get(1); 
+            String nazwisko = reader.get(2);
+            String ulica = reader.get("ulica");
+            String nrdomu = reader.get("nrdomu");
+            String nrmieszkania = reader.get("nrmieszkania");
+            
+            System.out.printf("%s %s %s %s %s %s\n", id, imie, nazwisko,
+                                ulica, nrdomu, nrmieszkania);
         }
     }
 }

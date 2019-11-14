@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CSVReader {
     BufferedReader reader;
@@ -27,15 +29,25 @@ public class CSVReader {
      * @throws java.io.FileNotFoundException
      */
     
-    public CSVReader(String filename, String delimiter, boolean hasHeader) throws FileNotFoundException, IOException {
-        reader = new BufferedReader(new FileReader(filename));
+    public CSVReader(String filename, String delimiter, boolean hasHeader) {
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CSVReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.delimiter = delimiter;
         this.hasHeader = hasHeader;
         
-        if(hasHeader) parseHeader();
+        if(hasHeader) {
+            try {
+                parseHeader();
+            } catch (IOException ex) {
+                Logger.getLogger(CSVReader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
-    public CSVReader(String filename, String delimiter) throws IOException {
+    public CSVReader(String filename, String delimiter) {
         this(filename, delimiter, true);
     }
     
@@ -43,12 +55,18 @@ public class CSVReader {
         this(filename, ",", true);
     }
     
-    public CSVReader(Reader reader, String delimiter, boolean hasHeader) throws IOException {
+    public CSVReader(Reader reader, String delimiter, boolean hasHeader) {
         this.reader = new BufferedReader(reader);
         this.delimiter = delimiter;
         this.hasHeader = hasHeader;
         
-        if (hasHeader) parseHeader();
+        if (hasHeader) {
+            try {
+                parseHeader();
+            } catch (IOException ex) {
+                Logger.getLogger(CSVReader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     void parseHeader() throws IOException {
@@ -64,8 +82,11 @@ public class CSVReader {
     
     boolean next() {
         try {
-            current = reader.readLine().split(delimiter);
-            return true;
+            String line = reader.readLine();
+            if (line != null) {
+                current = line.split(delimiter);
+                return true;
+            } else return false;
         } catch (IOException ex) {
             return false;
         }
@@ -99,10 +120,27 @@ public class CSVReader {
     }
     
     int getInt(int columnIndex) {
+        String value = get(columnIndex);
         return Integer.parseInt(get(columnIndex));
     }
     
     int getInt(String columnLabel) {
         return getInt(columnLabelsToInt.get(columnLabel));
+    }
+    
+    long getLong(int columnIndex) {
+        return Long.parseLong(get(columnIndex));
+    }
+            
+    long getLong(String columnLabel) {
+        return getLong(columnLabelsToInt.get(columnLabel));
+    }
+
+    double getDouble(int columnIndex) {
+        return Double.parseDouble(get(columnIndex));
+    }
+            
+    double getDouble(String columnLabel) {
+        return getDouble(columnLabelsToInt.get(columnLabel));
     }
 }
