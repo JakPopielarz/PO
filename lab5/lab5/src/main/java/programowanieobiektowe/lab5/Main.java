@@ -7,7 +7,9 @@ public class Main {
     public static void main(String[] args) {
 //        buildAndPrint();
 //        buildAndEvaluate();
-        defineCircle();
+//        defineCircle();
+//        diffPoly();
+        diffCircle();
     }
     
     /*
@@ -60,13 +62,58 @@ public class Main {
 
         Random r = new Random();
         
-        for (int i=1; i<=100; i++) { // nie do końca
+        for (int i=1; i<=100; i++) {
             double xv = -6 + (-2 + 6) * r.nextDouble();
             double yv = -4 + (0 + 4) * r.nextDouble();
             x.setValue(xv);
             y.setValue(yv);
             double fv = circle.evaluate();
-            System.out.print(String.format("%d Punkt (%f,%f) leży %s koła %s\n", i, xv, yv, (fv <= 0 ? "wewnątrz" : "na zewnątrz"), circle.toString()));
+            if (fv <= 0)
+                System.out.print(String.format("%d Punkt (%f,%f) leży %s koła %s\n", i, xv, yv, (fv <= 0 ? "wewnątrz" : "na zewnątrz"), circle.toString()));
+            else
+                i -= 1;
         }
+    }
+    
+    /*
+    * Diff Test1
+    */
+    static void diffPoly() {
+        Variable x = new Variable("x");
+        Node exp = new Sum()
+                .add(2,new Power(x,3))
+                .add(new Power(x,2))
+                .add(-2,x)
+                .add(7);
+        System.out.print("exp=");
+        System.out.println(exp.toString());
+ 
+        Node d = exp.diff(x);
+        System.out.print("d(exp)/dx=");
+        System.out.println(d.toString());
+    }
+    
+    /*
+    * Diff Test2
+    */
+    static void diffCircle() {
+        Variable x = new Variable("x");
+        Variable y = new Variable("y");
+        Node circle = new Sum()
+                .add(new Power(x,2))
+                .add(new Power(y,2))
+                .add(8,x)
+                .add(4,y)
+                .add(16);
+        System.out.print("f(x,y)=");
+        System.out.println(circle.toString());
+ 
+        Node dx = circle.diff(x);
+        System.out.print("d f(x,y)/dx=");
+        System.out.println(dx.toString());
+        System.out.print("d f(x,y)/dy=");
+        Node dy = circle.diff(y);
+        System.out.println(dy.toString());
+ 
     }
 }

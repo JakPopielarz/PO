@@ -15,6 +15,10 @@ abstract public class Node {
     
     int getSign() { return sign; }
     
+    abstract Node diff(Variable var);
+    
+    abstract boolean isZero();
+    
     /*
      * Oblicza wartość wyrażenia dla danych wartości zmiennych
      * występujących w wyrażeniu

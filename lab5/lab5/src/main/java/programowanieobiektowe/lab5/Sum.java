@@ -9,26 +9,45 @@ public class Sum extends Node {
     Sum(){}
  
     Sum(Node n1, Node n2){
-        args.add(n1);
-        args.add(n2);
+        if (! n1.isZero()) args.add(n1);
+        if (! n2.isZero()) args.add(n2);
     }
  
     Sum add(Node n){
-        args.add(n);
+        if (! n.isZero()) args.add(n);
         return this;
     }
  
     Sum add(double c){
-        args.add(new Constant(c));
+        if (c != 0) args.add(new Constant(c));
         return this;
     }
  
     Sum add(double c, Node n) {
-        Node mul = new Prod(c,n);
-        args.add(mul);
+        if (c != 0 && (! n.isZero())) {
+            Node mul = new Prod(c,n);
+            args.add(mul);
+        }
         return this;
     }
- 
+
+    @Override
+    Node diff(Variable var) {
+        Sum r = new Sum();
+        for(Node n:args){
+            r.add(n.diff(var));
+        }
+        return r;
+    }
+    
+    @Override
+    boolean isZero() {
+        for (Node n : args) {
+            if (!n.isZero()) return false;
+        }
+        return true;
+    }
+    
     @Override
     public double evaluate() {
         double result = 0;
@@ -40,7 +59,7 @@ public class Sum extends Node {
         return sign*result;
     }
  
-    int getArgumentsCount(){return args.size();}
+    int getArgumentsCount(){ return args.size(); }
  
     public String toString(){
         StringBuilder b =  new StringBuilder();

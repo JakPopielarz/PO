@@ -13,6 +13,18 @@ public class Power extends Node {
     }
  
     @Override
+    Node diff(Variable var) {
+        Prod r =  new Prod(sign*p,new Power(arg,p-1));
+        r.mul(arg.diff(var));
+        return r;
+    }
+    
+    @Override
+    boolean isZero() {
+        return false;
+    }
+    
+    @Override
     public double evaluate() {
         double argVal = arg.evaluate();
         return Math.pow(argVal,p);
