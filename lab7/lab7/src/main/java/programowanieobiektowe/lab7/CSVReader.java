@@ -1,4 +1,4 @@
-package programowanieobiektowe.lab6;
+package programowanieobiektowe.lab7;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -101,12 +101,12 @@ public class CSVReader {
     }
     
     boolean isMissing(int columnIndex) {
-        if (columnIndex > current.length) return true;
+        if (columnIndex >= current.length) return true;
         else return "".equals(current[columnIndex]);
     }
     
     boolean isMissing(String columnLabel) {
-        return columnLabels.contains(columnLabel);
+        return !columnLabels.contains(columnLabel);
     }
     
     String get(int columnIndex) {
@@ -142,5 +142,36 @@ public class CSVReader {
             
     double getDouble(String columnLabel) {
         return getDouble(columnLabelsToInt.get(columnLabel));
+    }
+    
+    int getInt0(int columnIndex) {
+        if (isMissing(columnIndex)) return 0;
+        String value = get(columnIndex);
+        return Integer.parseInt(get(columnIndex));
+    }
+    
+    int getInt0(String columnLabel) {
+        if (isMissing(columnLabel)) return 0;
+        return getInt0(columnLabelsToInt.get(columnLabel));
+    }
+    
+    long getLong0(int columnIndex) {
+        if (isMissing(columnIndex)) return 0;
+        return Long.parseLong(get(columnIndex));
+    }
+            
+    long getLong0(String columnLabel) {
+        if (isMissing(columnLabel)) return 0;
+        return getLong0(columnLabelsToInt.get(columnLabel));
+    }
+
+    double getDouble0(int columnIndex) {
+        if (isMissing(columnIndex)) return 0;
+        return Double.parseDouble(get(columnIndex));
+    }
+            
+    double getDouble0(String columnLabel) {
+        if (isMissing(columnLabel)) return 0;
+        return getDouble0(columnLabelsToInt.get(columnLabel));
     }
 }
