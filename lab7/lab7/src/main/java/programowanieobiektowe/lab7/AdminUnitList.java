@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class AdminUnitList {
@@ -13,7 +14,7 @@ public class AdminUnitList {
     Map<AdminUnit, Long> unitToParentId = new HashMap<>();
     Map<Long, List<AdminUnit>> parentIdToChildren = new HashMap<>();
     
-    public void read(String filename) throws IOException {
+    public void read(String filename, boolean mapCoords) throws IOException {
         CSVReader reader = new CSVReader(filename);
         boolean hasParent = false;
         while(reader.next()) {
@@ -43,7 +44,30 @@ public class AdminUnitList {
                 }
             }
             
+            try {
+                newUnit.bbox.addPoint(reader.getDouble("x1"), reader.getDouble("y1"));
+                newUnit.bbox.addPoint(reader.getDouble("x2"), reader.getDouble("y2"));
+                newUnit.bbox.addPoint(reader.getDouble("x3"), reader.getDouble("y3"));
+                newUnit.bbox.addPoint(reader.getDouble("x4"), reader.getDouble("y4"));
+            } catch (NumberFormatException ex) {}
+            
             units.add(newUnit);
+            
+            if (mapCoords) {
+                System.out.printf(Locale.US," %s: LINESTRING(%f %f, %f %f, %f %f, %f %f,%f %f)\n", 
+                reader.get("name"),
+                reader.getDouble0("x1"),
+                reader.getDouble0("y1"),
+                reader.getDouble0("x2"),
+                reader.getDouble0("y2"),
+                reader.getDouble0("x3"),
+                reader.getDouble0("y3"),
+                reader.getDouble0("x4"),
+                reader.getDouble0("y4"),
+                reader.getDouble0("x1"),
+                reader.getDouble0("y1")
+                );
+            }
         }
         
         for (AdminUnit unit: units) {
@@ -87,5 +111,25 @@ public class AdminUnitList {
     private void fixMissingValues() {
         for (AdminUnit unit: units)
             unit.fixMissingValues();
+    }
+    
+    AdminUnitList getNeighbors(AdminUnit unit, double maxdistance) {
+        AdminUnitList neighbors = new AdminUnitList();
+        if (unit.adminLevel > 8)  {// unit jest większy niż miasteczko
+            for (AdminUnit potentialNeighbor : units) {
+                if (potentialNeighbor.adminLevel == unit.adminLevel &&
+                            unit.bbox.intersects(potentialNeighbor.bbox))
+                    neighbors.units.add(potentialNeighbor);
+            }
+
+            return neighbors;
+        } else { // unit jest co najwyżej miasteczkiem
+            for (AdminUnit potentialNeighbor : units) {
+                if (potentialNeighbor.adminLevel == unit.adminLevel &&
+                        unit.bbox.distanceTo(potentialNeighbor.bbox) <= maxdistance)
+                    neighbors.units.add(potentialNeighbor);
+            }
+            return neighbors;
+        }
     }
 }

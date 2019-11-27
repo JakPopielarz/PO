@@ -12,6 +12,7 @@ public class AdminUnit {
     BoundingBox bbox = new BoundingBox();
     List<AdminUnit> children;
 
+    @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
         
@@ -20,6 +21,7 @@ public class AdminUnit {
         buf.append("population: ").append(population).append("; ");
         buf.append("area: ").append(area).append("; ");
         buf.append("density: ").append(density).append("; ");
+        buf.append("Bounding box: ").append(bbox);
         
         return buf.toString();
     }
