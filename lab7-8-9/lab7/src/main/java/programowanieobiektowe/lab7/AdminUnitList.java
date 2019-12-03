@@ -3,10 +3,12 @@ package programowanieobiektowe.lab7;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class AdminUnitList {
     List<AdminUnit> units = new ArrayList<>();
@@ -131,5 +133,108 @@ public class AdminUnitList {
             }
             return neighbors;
         }
+    }
+    
+    class Com implements Comparator<AdminUnit> {
+
+        @Override
+        public int compare(AdminUnit t, AdminUnit t1) {
+            if (t.name.compareTo(t1.name) > 0) return 1;
+            else if (t.name.compareTo(t1.name) == 0) return 0;
+            else return -1;
+        }        
+    }
+    
+    AdminUnitList sortInplaceByName() {
+        Com com = new Com();
+        units.sort(com);
+        return this;
+    }
+
+    
+    AdminUnitList sortInplaceByArea() {
+        Comparator<AdminUnit> com = new Comparator<AdminUnit>() {
+            @Override
+            public int compare(AdminUnit u, AdminUnit u2) {
+                if (u.area < u2.area) return 1;
+                else if (u.area == u2.area) return 0;
+                else return -1;
+            }
+        };
+        
+        units.sort(com);
+        
+        return this;
+    }
+    
+    AdminUnitList sortInplaceByPopulation() {
+        Comparator<AdminUnit> com = (AdminUnit u, AdminUnit u2) -> {
+            if (u.population < u2.population) return 1;
+            else if (u.population == u2.population) return 0;
+            else return -1;
+        };
+        
+        units.sort(com);
+        
+        return this;
+    }
+    
+    AdminUnitList sortInplace(Comparator<AdminUnit> cmp) {
+        boolean sorted = false;
+        AdminUnit temp;
+        
+        while(!sorted) {
+            sorted = true;
+            for (int i=0; i<units.size() - 1; i++) {
+                if (cmp.compare(units.get(i), units.get(i+1)) > 0) {
+                    temp = units.get(i);
+                    units.set(i, units.get(i+1));
+                    units.set(i+1, temp);
+                    sorted = false;
+                }
+            }
+        }
+        
+        return this;
+    }
+    
+    AdminUnitList sort(Comparator<AdminUnit> cmp) {
+        AdminUnitList result = new AdminUnitList();
+        
+        result.units = this.units;
+        return result.sortInplace(cmp);
+    }
+    
+    AdminUnitList filter(Predicate<AdminUnit> pred) {
+        AdminUnitList result = new AdminUnitList();
+
+        for (AdminUnit unit: units) {
+            if (pred.test(unit)) result.units.add(unit);
+        }
+        
+        return result;
+    }
+    
+    AdminUnitList filter(Predicate<AdminUnit> pred, int limit) {
+        AdminUnitList result = new AdminUnitList();
+
+        for (AdminUnit unit: units) {
+            if (pred.test(unit) && result.units.size() < limit) result.units.add(unit);
+        }
+        
+        return result;
+    }
+    
+    AdminUnitList filter(Predicate<AdminUnit> pred, int offset, int limit) {
+        AdminUnitList result = new AdminUnitList();
+
+        for (int i=offset; i<units.size(); i++) {
+            if (pred.test(units.get(i)) && result.units.size() < limit) 
+                result.units.add(units.get(i));
+            else if (result.units.size() >= limit)
+                break;
+        }
+        
+        return result;
     }
 }
